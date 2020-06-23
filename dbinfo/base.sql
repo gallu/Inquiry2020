@@ -1,5 +1,5 @@
 -- 1レコードが「1ユーザからの1回の問い合わせ」を意味するテーブル
-CREATE TABLE inquiry
+CREATE TABLE inquiry (
     inquiry_id SERIAL ,
     name VARCHAR(64) NOT NULL DEFAULT '' COMMENT '問い合わせ者名',
     email VARBINARY(254) NOT NULL DEFAULT '' COMMENT '問い合わせ者email',
@@ -14,7 +14,7 @@ CREATE TABLE inquiry
 
 
 -- 1レコードが「管理画面の1アカウント」を意味するテーブル
-CREATE TABLE admin_accounts
+CREATE TABLE admin_accounts (
     login_id VARBINARY(128) NOT NULL COMMENT 'ログイン用のID',
     password VARBINARY(255) NOT NULL COMMENT 'パスワード(hashed)',
     -- error_num INT UNSIGNED
