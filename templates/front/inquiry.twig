@@ -1,5 +1,5 @@
+{# inquiry.twig #}
 <!DOCTYPE HTML>
-<!-- inquiry.html -->
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -12,10 +12,10 @@
 </div>
 
 <h1>お問い合わせ</h1>
-<form action="./inquiry_confirm.html">
-お名前: <input><br>
-emailアドレス(必須): <input><br>
-問い合わせ内容(必須): <textarea rows="5" cols="50"></textarea>
+<form action="./inquiry_confirm.php" method="POST">
+お名前: <input name="name"><br>
+emailアドレス(必須): <input name="email"><br>
+問い合わせ内容(必須): <textarea name="body" rows="5" cols="50"></textarea>
 <br>
 <button>問い合わせる</button>
 </form>

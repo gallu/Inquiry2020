@@ -1,4 +1,7 @@
 <?php   // init.php
+//
+ob_start();
+session_start(); // セッション開始
 
 //
 define('BASEPATH', realpath(__DIR__ . '/..'));
