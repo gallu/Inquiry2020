@@ -9,4 +9,4 @@ class AdminAccountsModel extends Model {
     protected static $table_name = 'admin_accounts';
     protected static $pk_name = 'login_id';
 }
-insert into admin_accounts('login_id', 'password') values('root', 'pass');
+//insert into admin_accounts('login_id', 'password') values('root', 'pass');

@@ -17,6 +17,14 @@ class Model {
         //
         $this->data[$name] = $value;
     }
+    public function __get($name) {
+        //
+        //return $this->data[$name] ?? null;  // XXX
+        if (false === array_key_exists($name, $this->data)) {
+            throw new \Exception("{$name}は存在しないカラムです");
+        }
+        return $this->data[$name];
+    }
 
     // 識別子のエスケープ
     public static function escape($value) {

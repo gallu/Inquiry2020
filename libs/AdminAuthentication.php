@@ -1,10 +1,10 @@
-<?php // Authentication.php
+<?php // AdminAuthentication.php
 
 require_once(BASEPATH . '/libs/AdminAccountsModel.php');
 
 class AdminAuthentication {
     //
-    public function login($id, $pass) {
+    public static function login($id, $pass) {
         // 簡単にvalidate
         if ( ('' === $id)||('' === $pass) ) {
             return null;
@@ -17,8 +17,7 @@ class AdminAuthentication {
             return null;
         }
         // passwordのチェック
-XXXXXX
-        if (false === ) {
+        if ($pass !== $admin_account_obj->password) {
             // NG
             // XXX ログインロック
             return null;
