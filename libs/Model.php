@@ -10,10 +10,16 @@ class Model {
     /*
     $flight = new Flight;
     $flight->name = $request->name;
+    $flight->pk = $hoge;
     $flight->insert();
      */
     //
     public function __set($name, $value) {
+        // XXX primary keyなら不許可
+        if ( (true === $this->pk_deter_flg) && ($name === static::$pk_name) ) {
+            throw new \Exception('主キーは変更できません!');
+        }
+        
         //
         $this->data[$name] = $value;
     }
@@ -78,21 +84,17 @@ class Model {
 
         // プレースホルダに値をバインド
         foreach($this->data as $k => $v) {
-            //
-            if (true === is_null($v)) {
-                $type = \PDO::PARAM_NULL;
-            } else if ( (true === is_int($v))||(true === is_float($v)) ) {
-                $type = \PDO::PARAM_INT;
-            } else {
-                $type = \PDO::PARAM_STR;
-            }
-            //
-            $pre->bindValue(":{$k}", $v, $type);
+            $this::bind($pre, $k, $v);
         }
 
         // SQLを実行
         $r = $pre->execute();
 //var_dump($r);
+        // PK更新の抑止
+        if (true === $r) {
+            $this->pk_deter_flg = true;
+        }
+
         return $r;
     }
 
@@ -109,13 +111,7 @@ class Model {
         $pre = $dbh->prepare($sql);
 
         // 値のバインド
-        if ( (true === is_int($value))||(true === is_float($value)) ) {
-            $type = \PDO::PARAM_INT;
-        } else {
-            $type = \PDO::PARAM_STR;
-        }
-        //
-        $pre->bindValue(":{$pk_name}", $value, $type);
+        static::bind($pre, $pk_name, $value);
 
         // SQLの実行
         $r = $pre->execute();
@@ -136,14 +132,90 @@ class Model {
             $robj->$k = $v;
         }
 */
+        // PK更新の抑止
+        $robj->pk_deter_flg = true;
+
         //
         return $robj;
     }
 
+    // UPDATE
+    public function update() {
+        // 更新すべきデータを一通り取得
+        // XXX 「変更のないデータ」も一端update。チューニング対象
+        $data = $this->data;
+        unset($data[static::$pk_name]);
+//var_dump($data);
+
+        // pkの情報を取得
+        $pk = $this->{static::$pk_name};
+//var_dump(static::$pk_name, $pk);
+
+        //
+        $dbh = DbHandle::get(); // PDO
+        // SQLの組み立て
+        $table_name = $this::escape($this::$table_name);
+        $cols = $this::escape(array_keys($data));
+        $pk_col = $this::escape(static::$pk_name);
+//var_dump($table_name, $cols, $pk_col);
+        $set_array = [];
+        foreach($cols as $s) {
+            $set_array[] = "{$s}=:{$s}";
+        }
+        $set_value = implode(', ', $set_array);
+        //
+        $sql = "UPDATE {$table_name} SET {$set_value} WHERE {$pk_col}=:{$pk_col};";
+        $pre = $dbh->prepare($sql);
+//var_dump($sql);
+
+        foreach($this->data as $k => $v) {
+            $this::bind($pre, $k, $v);
+        }
+        // SQLの実行
+        $r = $pre->execute();
+        return $r;
+    }
+
 /*
-UPDATE
 SELECT( WHERE pk )
 */
+
+    protected static function bind(\PDOStatement $pre, string $k, $v) : bool {
+        if (true === is_null($v)) {
+            $type = \PDO::PARAM_NULL;
+        } else if ( (true === is_int($v))||(true === is_float($v)) ) {
+            $type = \PDO::PARAM_INT;
+        } else {
+            $type = \PDO::PARAM_STR;
+        }
+        //
+        return $pre->bindValue(":{$k}", $v, $type);
+    }
+
 //
 private $data = [];
+private $pk_deter_flg = false; // PKの更新抑止(trueならPK更新を抑止する)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

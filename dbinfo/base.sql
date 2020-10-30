@@ -21,5 +21,8 @@ CREATE TABLE admin_accounts (
     -- lock_datetime DATETIME
     PRIMARY KEY(login_id)
 )CHARACTER SET 'utf8mb4', COMMENT='1レコードが「管理画面の1アカウント」を意味するテーブル';
-
+ALTER TABLE admin_accounts
+    ADD error_num INT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'エラーカウント'
+   ,ADD lock_datetime DATETIME DEFAULT NULL COMMENT 'ロック時間'
+;
 

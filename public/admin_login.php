@@ -8,13 +8,37 @@ require_once(BASEPATH . '/libs/AdminAuthentication.php');
 $id = strval($_POST['id']) ?? '';
 $pass = strval($_POST['pw']) ?? '';
 //
-if (null === AdminAuthentication::login($id, $pass)) {
-    // XXXX
-    echo 'ng';
-    exit;
+if (null === ($admin_obj = AdminAuthentication::login($id, $pass))) {
+    //
+    $_SESSION['admin']['flash']['authentication_error'] = true;
+    $_SESSION['admin']['flash']['id'] = $id;
+    
+    // 入力画面に戻す
+    header('Location: ./admin.php');
 }
+// 以下、ログイン成功時の処理
 
-// XXX ok
-echo 'ok';
+// セッションIDを作り替える
+session_regenerate_id(true);
+
+// セッションに「認可用」の情報を入れる
+$_SESSION['admin']['auth']['login_id'] = $admin_obj->login_id;
+
+// ログイン後Topに遷移
+//var_dump($_SESSION);
+header('Location: ./admin_top.php');
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
