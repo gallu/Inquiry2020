@@ -1,0 +1,11 @@
+{# layout.twig #}
+{# 「ログイン後」の共通レイアウト #}
+{% extends 'admin/layout_base.twig' %}
+
+{% block  body %}
+<div>
+<h2>メニュー</h2>
+<a href="./admin_logout.php">ログアウト</a><br>
+</div>
+{% block contents %}{% endblock %}
+{% endblock %}

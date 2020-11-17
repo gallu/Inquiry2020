@@ -57,7 +57,13 @@ class AdminAuthentication {
         }
 
         // 認証OK
-        // XXX error_num をクリア
+        // error_num をクリア
+        if (0 != $admin_account_obj->error_num) {
+            $admin_account_obj->error_num = 0;
+            $admin_account_obj->update();
+        }
+        
+        //
         return $admin_account_obj;
     }
 }

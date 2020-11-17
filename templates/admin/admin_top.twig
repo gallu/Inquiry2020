@@ -1,13 +1,10 @@
-<!-- top.html -->
-<!DOCTYPE HTML>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>問い合わせ</title>
-</head>
-<body>
-<h1>問い合わせ一覧</h1>
+{# admin.twig #}
+{% extends 'admin/layout.twig' %}
 
+{% block  title %}ログイン{% endblock %}
+
+{% block contents %}
+<h2>問い合わせ一覧</h2>
 検索:
 <form action="./top.html">
 お名前(あいまい検索): <input><br>
@@ -22,25 +19,15 @@
   <th>問い合わせ日時 ↑ <a href="top.html">↓</a>
   <th>お名前 <a href="top.html">↑</a> <a href="top.html">↓</a>
   <th>返信有無
-  <th>問い合わせ本文(最初のｎ文字)
+  <th>問い合わせ本文(最初の20文字)
+{% for key, val in inquiry_list %}
 <tr>
-  <td>2020/05/25 11:00:00
-  <td>山田太郎
-  <td>
-  <td>問い合わせ...
-  <td><a href="./inquiry_detail.html">詳細</a>
-<tr>
-  <td>2020/05/24 11:00:00
-  <td>山田花子
-  <td>返信済み
-  <td>問い合わせ...
-  <td><a href="./inquiry_detail.html">詳細</a>
-<tr>
-  <td>2020/05/24 10:00:00
-  <td>山田花子
-  <td>
-  <td>問い合わせ...
-  <td><a href="./inquiry_detail.html">詳細</a>
+  <td>{{ val.created_at }}
+  <td>{{ val.name }}
+  <td>{% if  val.reply_at == null %}未返信{% else %}返信済み{% endif %}
+  <td>{{ val.body | slice(0,20) }}
+  <td><a href="./inquiry_detail.php?inquiry_id={{ val.inquiry_id | e('url') }}">詳細</a>
+{% endfor %}
+
 </table>
-</body>
-</html>
+{% endblock %}
