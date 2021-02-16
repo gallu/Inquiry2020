@@ -13,6 +13,16 @@ class Model {
     $flight->pk = $hoge;
     $flight->insert();
      */
+
+    /**
+     * dataをまるごと取得
+     *
+     * 主に「テンプレート等にデータを渡す」ために使用
+     */
+    public function get() {
+        return $this->data ;
+    }
+
     //
     public function __set($name, $value) {
         // XXX primary keyなら不許可

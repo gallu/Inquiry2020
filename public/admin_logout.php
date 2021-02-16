@@ -3,7 +3,7 @@
 require_once('init.php');
 
 // ログアウト処理
-unset($_SESSION['admin']['auth']);
+unset($_SESSION['admin']);
 
 // 遷移
 header('Location: admin.php');

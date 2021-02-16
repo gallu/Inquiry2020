@@ -1,4 +1,4 @@
-{# admin.twig #}
+{# admin_top.twig #}
 {% extends 'admin/layout.twig' %}
 
 {% block  title %}ログイン{% endblock %}
@@ -6,18 +6,43 @@
 {% block contents %}
 <h2>問い合わせ一覧</h2>
 検索:
-<form action="./top.html">
-お名前(あいまい検索): <input><br>
-問い合わせ日時:<input type="date"> ～ <input type="date"><br>
-返信有無: <input type="checkbox" name="reply_flg[]">未返信　<input type="checkbox" name="reply_flg[]">返信済み<br>
+<form action="./admin_top.php">
+お名前(あいまい検索): <input name="name" value="{{ find_items.name }}"><br>
+問い合わせ日時:<input type="date" name="from" value="{{ find_items.from }}">
+              ～ <input type="date" name="to" value="{{ find_items.to }}"><br>
+返信有無: 
+<label><input type="checkbox" name="reply_flg[]" value="0"
+    {% if 0 in find_items.reply_flg %} checked{% endif %}>未返信</label>
+
+<label><input type="checkbox" name="reply_flg[]" value="1"
+    {% if 1 in find_items.reply_flg %} checked{% endif %}>返信済み</label><br>
+
 <button>検索する</button>
 </form>
+<br>
+件数: {{ count }}件<br>
+Page: {% set print_page = page + 1 %}{{ print_page }}ページ目<br>
+{#
+sort: {{ sort }}<br>
+max_page: {{ max_page }}<br>
+#}
+{% for i in range(0, max_page) %}
+  {% set ii = i + 1 %}
+  {% if page == i %}
+    [{{ ii }}]
+  {% else %}
+    <a href="./admin_top.php?page={{ i }}&sort={{ sort|url_encode }}&{{ find_param_string|raw }}">{{ ii }}</a>
+  {% endif %}
+  　{# 間を開けるための全角スペース #}
+{% endfor %}
 <br>
 
 <table border="1">
 <tr>
-  <th>問い合わせ日時 ↑ <a href="top.html">↓</a>
-  <th>お名前 <a href="top.html">↑</a> <a href="top.html">↓</a>
+  <th>問い合わせ日時 <a href="admin_top.php?sort=created_at&{{ find_param_string|raw }}">↑</a>
+                     <a href="admin_top.php?sort=created_at_desc&{{ find_param_string|raw }}">↓</a>
+  <th>お名前 <a href="admin_top.php?sort=name&{{ find_param_string|raw }}">↑</a>
+             <a href="admin_top.php?sort=name_desc&{{ find_param_string|raw }}">↓</a>
   <th>返信有無
   <th>問い合わせ本文(最初の20文字)
 {% for key, val in inquiry_list %}

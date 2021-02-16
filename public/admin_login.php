@@ -15,7 +15,9 @@ if (null === ($admin_obj = AdminAuthentication::login($id, $pass))) {
     
     // 入力画面に戻す
     header('Location: ./admin.php');
+    exit;
 }
+
 // 以下、ログイン成功時の処理
 
 // セッションIDを作り替える
